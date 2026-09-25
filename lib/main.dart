@@ -7,7 +7,7 @@ import 'screens/product_list_screen.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (_) => CartProvider(),
+      create: (context) => CartProvider(),
       child: const MyApp(),
     ),
   );
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Shopping Cart',
+      title: 'Product Cart',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,

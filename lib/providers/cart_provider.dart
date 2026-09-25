@@ -4,17 +4,17 @@ import '../data/products.dart';
 import '../models/product.dart';
 
 class CartProvider extends ChangeNotifier {
-
   final Map<int, int> _cartItems = {};
 
   Map<int, int> get cartItems {
     return Map.unmodifiable(_cartItems);
   }
 
+
   int get totalItems {
     return _cartItems.values.fold(
       0,
-          (sum, quantity) => sum + quantity,
+          (total, quantity) => total + quantity,
     );
   }
 
@@ -27,8 +27,12 @@ class CartProvider extends ChangeNotifier {
   }
 
   void addToCart(Product product) {
-    _cartItems[product.id] =
-        (_cartItems[product.id] ?? 0) + 1;
+    if (_cartItems.containsKey(product.id)) {
+      _cartItems[product.id] =
+          _cartItems[product.id]! + 1;
+    } else {
+      _cartItems[product.id] = 1;
+    }
 
     notifyListeners();
   }
@@ -49,10 +53,12 @@ class CartProvider extends ChangeNotifier {
       return;
     }
 
-    final quantity = _cartItems[product.id]!;
+    final currentQuantity =
+    _cartItems[product.id]!;
 
-    if (quantity > 1) {
-      _cartItems[product.id] = quantity - 1;
+    if (currentQuantity > 1) {
+      _cartItems[product.id] =
+          currentQuantity - 1;
     } else {
       _cartItems.remove(product.id);
     }
@@ -72,6 +78,13 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  List<Product> get cartProducts {
+    return products.where((product) {
+      return _cartItems.containsKey(product.id);
+    }).toList();
+  }
+
   double get subtotal {
     double total = 0;
 
@@ -80,11 +93,14 @@ class CartProvider extends ChangeNotifier {
             (product) => product.id == entry.key,
       );
 
-      total += product.price * entry.value;
+      final quantity = entry.value;
+
+      total += product.price * quantity;
     }
 
     return total;
   }
+
 
   double get discount {
     if (subtotal > 2000) {
@@ -94,15 +110,8 @@ class CartProvider extends ChangeNotifier {
     return 0;
   }
 
+
   double get finalTotal {
     return subtotal - discount;
-  }
-
-  List<Product> get cartProducts {
-    return products
-        .where(
-          (product) => _cartItems.containsKey(product.id),
-    )
-        .toList();
   }
 }

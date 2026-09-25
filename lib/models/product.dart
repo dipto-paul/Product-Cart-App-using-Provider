@@ -2,7 +2,7 @@ class Product {
   final int id;
   final String name;
   final double price;
-  final String icon;
+  final IconType icon;
 
   const Product({
     required this.id,
@@ -10,4 +10,13 @@ class Product {
     required this.price,
     required this.icon,
   });
+}
+
+enum IconType {
+  headphone,
+  watch,
+  keyboard,
+  mouse,
+  speaker,
+  powerBank,
 }

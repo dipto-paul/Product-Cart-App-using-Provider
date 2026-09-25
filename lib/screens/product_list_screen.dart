@@ -14,21 +14,28 @@ class ProductListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Shopping Cart',
+          'Product Cart',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        centerTitle: false,
 
         actions: [
           Consumer<CartProvider>(
-            builder: (context, cart, child) {
+            builder: (
+                context,
+                cart,
+                child,
+                ) {
               return Stack(
-                alignment: Alignment.center,
                 children: [
                   IconButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
+                          builder: (context) =>
                           const CartScreen(),
                         ),
                       );
@@ -41,22 +48,30 @@ class ProductListScreen extends StatelessWidget {
                   if (cart.totalItems > 0)
                     Positioned(
                       right: 5,
-                      top: 7,
+                      top: 5,
                       child: Container(
                         padding:
                         const EdgeInsets.symmetric(
                           horizontal: 5,
                           vertical: 2,
                         ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .error,
+                        decoration:
+                        BoxDecoration(
+                          color: Colors.red,
                           borderRadius:
-                          BorderRadius.circular(10),
+                          BorderRadius.circular(
+                            10,
+                          ),
+                        ),
+                        constraints:
+                        const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
                         ),
                         child: Text(
                           '${cart.totalItems}',
+                          textAlign:
+                          TextAlign.center,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 11,
@@ -70,16 +85,21 @@ class ProductListScreen extends StatelessWidget {
               );
             },
           ),
+
+          const SizedBox(width: 6),
         ],
       ),
 
-
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
+
         itemCount: products.length,
+
         itemBuilder: (context, index) {
+          final product = products[index];
+
           return ProductCard(
-            product: products[index],
+            product: product,
           );
         },
       ),

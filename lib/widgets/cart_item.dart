@@ -12,6 +12,28 @@ class CartItem extends StatelessWidget {
     required this.product,
   });
 
+  IconData get productIcon {
+    switch (product.icon) {
+      case IconType.headphone:
+        return Icons.headphones;
+
+      case IconType.watch:
+        return Icons.watch;
+
+      case IconType.keyboard:
+        return Icons.keyboard;
+
+      case IconType.mouse:
+        return Icons.mouse;
+
+      case IconType.speaker:
+        return Icons.speaker;
+
+      case IconType.powerBank:
+        return Icons.battery_charging_full;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
@@ -19,18 +41,29 @@ class CartItem extends StatelessWidget {
     final quantity = cart.quantityOf(product);
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 12),
 
       child: Padding(
         padding: const EdgeInsets.all(14),
 
         child: Row(
           children: [
-
-            Text(
-              product.icon,
-              style: const TextStyle(
-                fontSize: 32,
+            Container(
+              width: 58,
+              height: 58,
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .primaryContainer,
+                borderRadius:
+                BorderRadius.circular(14),
+              ),
+              child: Icon(
+                productIcon,
+                size: 30,
+                color: Theme.of(context)
+                    .colorScheme
+                    .onPrimaryContainer,
               ),
             ),
 
@@ -45,6 +78,7 @@ class CartItem extends StatelessWidget {
                     product.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
 
@@ -52,18 +86,22 @@ class CartItem extends StatelessWidget {
 
                   Text(
                     '৳${product.price.toStringAsFixed(0)} each',
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                    ),
                   ),
 
                   const SizedBox(height: 8),
 
-                  // Quantity Controls
                   Row(
                     children: [
                       IconButton(
                         onPressed: () {
                           context
                               .read<CartProvider>()
-                              .decreaseQuantity(product);
+                              .decreaseQuantity(
+                            product,
+                          );
                         },
                         icon: const Icon(
                           Icons.remove_circle_outline,
@@ -72,11 +110,18 @@ class CartItem extends StatelessWidget {
                         VisualDensity.compact,
                       ),
 
-                      Text(
-                        '$quantity',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                      Container(
+                        width: 35,
+                        alignment:
+                        Alignment.center,
+                        child: Text(
+                          '$quantity',
+                          style:
+                          const TextStyle(
+                            fontWeight:
+                            FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
 
@@ -84,7 +129,9 @@ class CartItem extends StatelessWidget {
                         onPressed: () {
                           context
                               .read<CartProvider>()
-                              .increaseQuantity(product);
+                              .increaseQuantity(
+                            product,
+                          );
                         },
                         icon: const Icon(
                           Icons.add_circle_outline,
@@ -99,12 +146,12 @@ class CartItem extends StatelessWidget {
             ),
 
             IconButton(
-              tooltip: 'Remove',
               onPressed: () {
                 context
                     .read<CartProvider>()
                     .removeFromCart(product);
               },
+              tooltip: 'Remove',
               icon: const Icon(
                 Icons.delete_outline,
               ),
