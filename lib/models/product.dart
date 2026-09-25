@@ -4,7 +4,7 @@ class Product {
   final double price;
   final String icon;
 
-   Product({
+  const Product({
     required this.id,
     required this.name,
     required this.price,
